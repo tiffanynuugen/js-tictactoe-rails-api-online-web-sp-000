@@ -4,11 +4,18 @@ window.onload = () => {
 
 function attachListeners() {
 // listens to when a square is clicked
-  const squares = document.querySelectorAll('td').forEach(square => {
+  const squares = document.querySelectorAll("td").forEach(square => {
     square.addEventListener("click", () => {
         doTurn(square)
     })
   })
+
+  // const body = document.querySelector("tbody").addEventListener("click", () => {
+  //   const x = event.target.dataset.x
+  //   const y = event.target.dataset.y
+  //   const square = document.querySelector(`[data-x="${x}"][data-y="${y}"]`)
+  // })
+
 }
 
 // global variable
@@ -37,11 +44,8 @@ function setMessage() {
 // if player gets either token in three consecutive squares horizontally,
 // vertically, or diagonally, then player wins.
 function checkWinner() {
-  // const body = document.querySelector("tbody").addEventListener("click", () => {
-  //   const x = event.target.dataset.x
-  //   const y = event.target.dataset.y
-  //   const square = document.querySelector(`[data-x="${x}"][data-y="${y}"]`)
-  // })
+  const squares = document.querySelectorAll("td")
+  console.log(squares);
 }
 
 function doTurn(square) {
