@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'activerecord-reset-pk-sequence'
+
 gem 'active_model_serializers', '0.10.6'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails'

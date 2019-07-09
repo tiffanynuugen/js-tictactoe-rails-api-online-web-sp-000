@@ -1,3 +1,8 @@
+let currentGameId
+var turn = 0
+const state = []
+
+
 window.onload = () => {
   attachListeners()
 }
@@ -15,11 +20,10 @@ function attachListeners() {
   //   const y = event.target.dataset.y
   //   const square = document.querySelector(`[data-x="${x}"][data-y="${y}"]`)
   // })
-
+  $("#save").on("click", function() {
+    saveGame()
+  })
 }
-
-// global variable
-var turn = 0
 
 // returns "X" or "O" based on either even/odd turn count
 function player() {
@@ -53,13 +57,9 @@ function checkWinner() {
   // come up with an array of all possible horizontal, vertical, and diagonal winning combos
   const winningCombos = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
   // get all of the X's, O's, or blanks from each of the squares
-  const squares = document.querySelectorAll("td").forEach(square => {
+  document.querySelectorAll("td").forEach(square => {
     board.push(square.innerHTML)
   })
-
-  // console.log(board);
-  // return board
-  // debugger
 
   // iterate over array and get each combo
   // then compare three tokens of each square with each other
@@ -119,29 +119,63 @@ function checkWinner() {
   // acc = 1, el = "X", i = 2 => [0, 1, 2]
 }
 
+// iterate through squares and clear all tokens
+// if game is won, reset board and turn counter
+function resetFunction() {
+  const squares = document.querySelectorAll("td").forEach(square => {
+    square.innerHTML = ""
+  })
+  turn = 0
+}
+
 function doTurn(square) {
   // place token on to clicked square
   updateState(square)
   // then increment by 1
   turn++
-  // debugger
-  // if game is won, reset board and turn counter
-  // iterate through squares and clear all tokens
   if (checkWinner()) {
-    const squares = document.querySelectorAll("td").forEach(square => {
-      square.innerHTML = ""
-    })
-    turn = 0
+    resetFunction()
   } else if (turn === 9) {
-    // debugger
     setMessage("Tie game.")
-    const squares = document.querySelectorAll("td").forEach(square => {
-      square.innerHTML = ""
-    })
-    // debugger
-    turn = 0
+    resetFunction()
   }
 }
+
+$(document).ready(function() {
+  $("#previous").click(function() {
+    $.ajax({
+      url: "/games",
+      method: "GET"
+    })
+  })
+})
+
+function saveState() {
+  document.querySelectorAll("td").forEach(square => {
+    state.push(square.innerHTML)
+  })
+}
+function saveGame() {
+  saveState()
+  if (!currentGameId) {
+    $.ajax({
+      method: "POST",
+      url: "/games",
+      success: function(game) {
+        currentGameId = game.data.id
+      }
+    })
+  } else {
+    $.ajax({
+      method: "PATCH",
+      url: `/games/${currentGameId}`,
+      data: state
+    })
+  }
+}
+
+
+
 
 
 
